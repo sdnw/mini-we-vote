@@ -1,29 +1,28 @@
 // src/components/MyBallot.js
-import React, { useState } from 'react';
-
-const mockCandidates = [
-  { id: 1, name: 'Candidate A', party: 'Party Democrat' },
-  { id: 2, name: 'Candidate B', party: 'Party Republican' },
-];
+import React, { useState, useEffect } from 'react';
+import { useEndorsements } from '../context/EndorsementsContext';
 
 const MyBallot = () => {
-  const [endorsed, setEndorsed] = useState([]);
+  const { endorsed, addEndorsement, removeEndorsement } = useEndorsements();
+  const [candidates, setCandidates] = useState([]);
 
-  const handleEndorse = (id) => {
-    if (!endorsed.includes(id)) {
-      setEndorsed([...endorsed, id]);
-    }
-  };
+  useEffect(() => {
+    import('../data/candidates.json').then(data => setCandidates(data.default));
+  }, []);
 
   return (
     <main>
       <h2>My Ballot</h2>
       <ul>
-        {mockCandidates.map(candidate => (
+        {candidates.map(candidate => (
           <li key={candidate.id}>
             <p>{candidate.name} - {candidate.party}</p>
-            <button onClick={() => handleEndorse(candidate.id)}>
-              {endorsed.includes(candidate.id) ? 'Endorsed' : 'Endorse'}
+            <button onClick={() =>
+              endorsed.includes(candidate.id)
+                ? removeEndorsement(candidate.id)
+                : addEndorsement(candidate.id)
+            }>
+              {endorsed.includes(candidate.id) ? 'Remove Endorsement' : 'Endorse'}
             </button>
           </li>
         ))}

@@ -6,9 +6,10 @@ import Footer from './components/Footer';
 import HomePage from './components/HomePage';
 import MyBallot from './components/MyBallot';
 import Endorsements from './components/Endorsements';
+import { EndorsementsProvider } from './context/EndorsementsContext';
 
-const App = () => {
-  return (
+const App = () => (
+  <EndorsementsProvider>
     <Router>
       <Header />
       <Routes>
@@ -18,7 +19,7 @@ const App = () => {
       </Routes>
       <Footer />
     </Router>
-  );
-};
+  </EndorsementsProvider>
+);
 
 export default App;

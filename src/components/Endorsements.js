@@ -1,21 +1,31 @@
 // src/components/Endorsements.js
-import React, { useContext } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useEndorsements } from '../context/EndorsementsContext';
 
 const Endorsements = () => {
-  const endorsedCandidates = [
-    { id: 1, name: 'Candidate A', party: 'Party Democrat' },
-  ];
+  const { endorsed } = useEndorsements();
+  const [candidates, setCandidates] = useState([]);
+
+  useEffect(() => {
+    import('../data/candidates.json').then(data => setCandidates(data.default));
+  }, []);
+
+  const endorsedCandidates = candidates.filter(candidate => endorsed.includes(candidate.id));
 
   return (
     <main>
       <h2>Your Endorsements</h2>
-      <ul>
-        {endorsedCandidates.map(candidate => (
-          <li key={candidate.id}>
-            <p>{candidate.name} - {candidate.party}</p>
-          </li>
-        ))}
-      </ul>
+      {endorsedCandidates.length > 0 ? (
+        <ul>
+          {endorsedCandidates.map(candidate => (
+            <li key={candidate.id}>
+              <p>{candidate.name} - {candidate.party}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>You have not endorsed any candidates yet.</p>
+      )}
     </main>
   );
 };
